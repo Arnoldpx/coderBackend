@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Producto2",
+    "description": "Esta es una descripción 2",
+    "price": 144,
+    "thumbnail": "https://ejemploU2.com/imagen.jpg",
+    "code": "ABc123",
+    "stock": 50,
+    "id": 3
+  },
+  {
+    "title": "Producto3",
+    "description": "Esta es una descripción 3",
+    "price": 144,
+    "thumbnail": "https://ejemploU3.com/imagen.jpg",
+    "code": "ABd123",
+    "stock": 50,
+    "id": 4
+  },
+  {
+    "title": "producto5",
+    "description": "esta es una describcion 5",
+    "price": "233",
+    "thumbnail": "4",
+    "code": "23",
+    "stock": "234",
+    "id": 5
+  }
+]

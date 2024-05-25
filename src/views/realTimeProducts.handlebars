@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Products</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Real-Time Products</h1>
+    <ul id="product-list">
+        {{#each products}}
+            <li data-id="{{this.id}}">{{this.title}} - {{this.description}} - ${{this.price}}</li>
+        {{/each}}
+    </ul>
+
+    <form id="add-product-form">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="text" name="thumbnail" placeholder="Thumbnail" required>
+        <input type="text" name="code" placeholder="Code" required>
+        <input type="number" name="stock" placeholder="Stock" required>
+        <button type="submit">Agregar producto</button>
+    </form>
+
+    <button id="delete-product-button">Eliminar Producto Seleccionado</button>
+
+    <script>
+        const socket = io();
+        const productList = document.getElementById('product-list');
+        const addProductForm = document.getElementById('add-product-form');
+        const deleteProductButton = document.getElementById('delete-product-button');
+
+        let selectedProductId = null;
+
+        // Actualizar la lista de productos
+        socket.on('updateProducts', (products) => {
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', product.id);
+                li.textContent = `${product.title} - ${product.description} - $${product.price}`;
+                li.addEventListener('click', () => {
+                    selectedProductId = product.id;
+                    productList.querySelectorAll('li').forEach(item => item.classList.remove('selected'));
+                    li.classList.add('selected');
+                });
+                productList.appendChild(li);
+            });
+        });
+
+        // Agreegar producto
+        addProductForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(addProductForm);
+            const product = {};
+            formData.forEach((value, key) => {
+                product[key] = value;
+            });
+
+            // Emitir evento para crear producto
+            socket.emit('createProduct', product);
+            addProductForm.reset();
+        });
+
+        // Eliminar producto
+        deleteProductButton.addEventListener('click', () => {
+            if (selectedProductId) {
+                socket.emit('deleteProduct', selectedProductId);
+                selectedProductId = null;
+            } else {
+                alert('Selecciona un producto para eliminar');
+            }
+        });
+    </script>
+</body>
+</html>
